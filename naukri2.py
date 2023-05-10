@@ -58,26 +58,38 @@ print('entered search')
 time.sleep(1)
 
 # WE TAKE LINKS FROM NAUKRI.COM AND STORE THEM IN 'LINKS' LIST
-links=[]
-url = driver1.find_elements(By.XPATH, '//*[@class="title ellipsis"]')
+#links=[]
+articles=[]
+#url = driver1.find_elements(By.XPATH, '//*[@class="title ellipsis"]')
 while(True):
     try:
-            for urls in url[:25]:
-                    temp1 = urls.get_attribute("href")
-                    time.sleep(1)
-                    links.append(temp1)
-                    time.sleep(1)
-                    print(links)
-                    print(len(links))
-                    time.sleep(1)
-            next=driver1.find_element(By.XPATH,'//*[@class="fleft pages"]/a')
-            #driver1.execute_script("arguments[0].click();", next)
-            if (len(links)>25):
-                driver1.execute_script("arguments[0].click();", next)
-            else:
-                break
-    except Exception as ex:
-        print(ex)
-        # continue
+        time.sleep(2)
+        elem = driver1.find_element(By.XPATH, "//a[@class='fright fs14 btn-secondary br2']")
+        urls = driver1.find_elements(By.XPATH, '//*[@class="title ellipsis"]')
+        for url in urls:
+            articles.append(url.get_attribute("href"))
+            print(articles)
+            print(len(articles))
+        if (len(articles)<25):
+            elem.click()
+        else:
+            break
+    except(NoSuchElementException, StaleElementReferenceException, ElementNotInteractableException,
+           ElementClickInterceptedException) as ex:
+        print("breaking as there is no next page")
         break
-time.sleep(5)
+
+list_of_skills=[]
+for url in articles:
+    driver1.get(url)
+    divs = driver1.find_elements(By.XPATH, '//div[@class="key-skill"]//a')
+    for div in divs:
+        text = div.find_element(By.XPATH, './span').text
+        list_of_skills.append(text)
+        print(text)
+        text = text.replace("\n", ' ')
+    list_of_skills1 = list(set(list_of_skills))
+    import pandas as pd
+
+    df = pd.DataFrame(list_of_skills1, columns=['list of skills'])
+    df.to_excel("skill-req.xlsx")
