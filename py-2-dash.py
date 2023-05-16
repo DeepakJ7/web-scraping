@@ -43,11 +43,13 @@ job_options = [
     {'label': 'IT Vendor Manager', 'value': 'it-vendor-manager'},
 ]
 
+search = dcc.Dropdown(id="input-search-term", options=job_options, value="software-engineer")
+
 app.layout = html.Div(
     children=[
         html.H1("Job Search"),
         html.Label("Select a job:"),
-        dcc.Dropdown(id="input-search-term", options=job_options, value=""),
+        search,
         html.Button("Search", id="btn-search", n_clicks=0),
         html.H2("Top 40 Job Links:"),
         html.Ul(id="articles"),
@@ -69,13 +71,12 @@ def perform_search(articles , options):
     driver1.maximize_window()
     driver1.find_element(By.XPATH, '//*[@id="root"]/div[6]/div/span').click()
     box1 = driver1.find_element(By.XPATH, '//*[@id="root"]/div[6]/div/div[1]/div[1]/div/div/div/div[1]/div/input')
-    # head = '"google'
-    query = {input-search-term}
+    query = {search}
     for i in query:
         box1.send_keys(i)
     driver1.find_element(By.XPATH, '//*[@id="root"]/div[6]/div/div/div[6]').click()
     time.sleep(5)
-    box2 = driver1.find_element(By.XPATH, '//*[@id="root"]/div[4]/div/div/section[1]/div[2]/div[4]/div[2]/div[1]/label/i').click()
+    #box2 = driver1.find_element(By.XPATH, '//*[@id="root"]/div[4]/div/div/section[1]/div[2]/div[4]/div[2]/div[1]/label/i').click()
     articles = []
     url = driver1.find_elements(By.XPATH, '//*[@class="title ellipsis"]')
     while (True):
